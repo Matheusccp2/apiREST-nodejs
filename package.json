@@ -1,0 +1,27 @@
+{
+  "name": "apirest-nodejs",
+  "version": "1.0.0",
+  "description": "Criando uma REST API em Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Matheusccp2/apiREST-nodejs.git"
+  },
+  "keywords": [
+    "node",
+    "restapi",
+    "api"
+  ],
+  "author": "Matheus Costa Caetano Pinto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Matheusccp2/apiREST-nodejs/issues"
+  },
+  "homepage": "https://github.com/Matheusccp2/apiREST-nodejs#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
