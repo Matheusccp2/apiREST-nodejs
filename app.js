@@ -11,6 +11,24 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false})); // receber apenas dados simples;
 app.use(bodyParser.json()); // trabalhar somente com JSON;
 
+app.use((req, res, next) => {
+    // Origem que permite ser acessada
+    res.header('Acces-Control-Allow-Origin', '*'); // no lugar do * pode-se colocar o servidor que pode ser acessado na API, com o * qualquer servidor / site pode acessar
+    // Cabeçalhos aceitos
+    res.header(
+        'Acces-Control-Allow-Header',
+        'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+
+    // Metodos que podem ser retornados
+    if (req.method === 'OPTIONS') {
+        res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+        return res.status(200).send({});
+    };
+
+    next();
+})
+
 app.use('/produtos', rotaProdutos);
 app.use('/pedidos', rotaPedidos);
 
