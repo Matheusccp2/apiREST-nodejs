@@ -10,8 +10,15 @@ router.get('/', (req, res, next) => {
 
 // Adiciona um Pedido
 router.post('/', (req, res, next) => {
+
+    const pedido = {
+        id_produto: req.body.id_produto,
+        quantididade: req.body.quantididade
+    }
+
     res.status(201).send({
-        mensagem: 'Pedido criado'
+        mensagem: 'Pedido criado',
+        pedidoCriado: pedido
     });
 });
 
