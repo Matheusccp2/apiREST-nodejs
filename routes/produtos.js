@@ -67,7 +67,7 @@ router.patch('/', (req, res, next) => {
             (error, resultado, field) => {
                 conn.release(); // NUNCA DEIXAR DE USAR | Libera a conexão
                 if (error) { return res.status(500).send({ error: error })}
-                res.status(201).send({
+                res.status(202).send({
                     mensagem: 'Produto alterado com sucesso',
                 });
             }
@@ -77,8 +77,19 @@ router.patch('/', (req, res, next) => {
 
 // Exclui um Produto
 router.delete('/', (req, res, next) => {
-    res.status(201).send({
-        mensagem: 'Produto excluído'
+    mysql.getConnection((error, conn) => {
+        if (error) { return res.status(500).send({ error: error })}
+        conn.query(
+            `DELETE FROM produtos WHERE id_produto = ?`, [req.body.id_produto],
+            (error, resultado, field) => {
+                conn.release(); // NUNCA DEIXAR DE USAR | Libera a conexão
+                if (error) { return res.status(500).send({ error: error })}
+
+                res.status(202).send({
+                    mensagem: 'Produto removido com sucesso',
+                });
+            }
+        )
     });
 });
 
