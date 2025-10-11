@@ -33,15 +33,41 @@ router.get('/', (req, res, next) => {
 
 // Adiciona um Pedido
 router.post('/', (req, res, next) => {
+    mysql.getConnection((error, conn) => {
+        if (error) { return res.status(500).send({ error: error })}
+        conn.query('SELECT * FROM produtos WHERE id_produto = ?', 
+            [req.body.id_produto], 
+            (error, result, field) => {
+                if (error) { return res.status(500).send({ error: error })}
+                if (result.length == 0) {
+                    return res.status(404).send({
+                        mensagem: 'Produto não encontrado.'
+                    })
+                }
 
-    const pedido = {
-        id_produto: req.body.id_produto,
-        quantididade: req.body.quantididade
-    }
-
-    res.status(201).send({
-        mensagem: 'Pedido criado',
-        pedidoCriado: pedido
+            conn.query(
+                "INSERT INTO pedidos (id_produto, quantidade) VALUES (?, ?)",
+                [req.body.id_produto, req.body.quantidade],
+                (error, result, field) => {
+                    conn.release(); // NUNCA DEIXAR DE USAR | Libera a conexão
+                    if (error) { return res.status(500).send({ error: error })}
+                    const response = {
+                        mensagem: 'Pedido inserido com sucesso!',
+                        pedidoCriado: {
+                            id_pedido: result.id_pedido,
+                            id_produto: req.body.id_produto,
+                            quantidade: req.body.quantidade,
+                            request: {
+                                tipo: 'GET',
+                                descricao: 'Retorna todos os pedidos',
+                                url: 'http://localhost:3000/pedidos'
+                            }
+                        }
+                    }
+                    return res.status(201).send(response);
+                }
+            )
+        })
     });
 });
 
