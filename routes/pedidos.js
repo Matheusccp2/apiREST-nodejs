@@ -73,10 +73,34 @@ router.post('/', (req, res, next) => {
 
 // Retorna os dados de um Pedido
 router.get('/:id_pedido', (req, res, next) => {
-    const id = req.params.id_pedido;
-    res.status(200).send({
-        mensagem: 'Detalhes do Pedido',
-        id_pedido: id
+    mysql.getConnection((error, conn) => {
+        if (error) { return res.status(500).send({ error: error })}
+        conn.query(
+            "SELECT * FROM pedidos WHERE id_pedido = ?;",
+            [req.params.id_pedido],
+            (error, result, fields) => {
+                if (error) { return res.status(500).send({ error: error })}
+
+                if (result.length == 0) {
+                    return res.status(404).send({
+                        mensagem: 'Não foi encontrado um pedido com este ID'
+                    })
+                }
+                const response = {
+                    pedido: {
+                        id_pedido: result[0].id_pedido,
+                        id_pedido: result[0].id_pedido,
+                        quantidade: result[0].quantidade,
+                        request: {
+                            tipo: 'GET',
+                            descricao: 'Retorna todos os pedidos',
+                            url: 'http://localhost:3000/pedidos'
+                        }
+                    }
+                }
+                return res.status(200).send(response)
+            }
+        )
     });
 })
 
