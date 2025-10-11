@@ -90,8 +90,8 @@ router.get('/:id_produto', (req, res, next) => {
                 return res.status(200).send(response)
             }
         )
-    })
-})
+    });
+});
 
 // Altera / Atualiza um Produto
 router.patch('/', (req, res, next) => {
